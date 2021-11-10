@@ -32,12 +32,8 @@ pipeline {
          stage('Building our image') { 
 
              steps { 
-                      sh sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-                //  script { 
-
-                //    dockerImage = docker.build registry + ":latest" 
-
-                //  }
+                      sh "sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl"
+                
 
              } 
 
