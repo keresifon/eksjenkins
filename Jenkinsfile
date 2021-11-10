@@ -15,9 +15,7 @@ pipeline {
    
     agent any 
 
-    parameters {
-    gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', name: 'BRANCH', type: 'PT_BRANCH'
-  }
+    
 
     stages { 
 
@@ -25,7 +23,7 @@ pipeline {
 
             steps { 
 
-                 git branch: "${params.BRANCH}", url: 'https://github.com/keresifon/eksjenkins.git' //git 'https://github.com/keresifon/portfolio.git' 
+                 git  url: 'https://github.com/keresifon/eksjenkins.git' //git 'https://github.com/keresifon/portfolio.git' 
 
             }
 
