@@ -29,19 +29,19 @@ pipeline {
 
         } 
 
-        // stage('Building our image') { 
+         stage('Building our image') { 
 
-        //     steps { 
+             steps { 
+                      sh sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+                //  script { 
 
-        //         script { 
+                //    dockerImage = docker.build registry + ":latest" 
 
-        //             dockerImage = docker.build registry + ":latest" 
+                //  }
 
-        //         }
+             } 
 
-        //     } 
-
-        // }
+        }
 
         // stage('Deploy our image') { 
 
