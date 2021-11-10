@@ -23,7 +23,7 @@ pipeline {
 
             steps { 
 
-                 git  url: 'https://github.com/keresifon/eksjenkins.git' //git 'https://github.com/keresifon/portfolio.git' 
+                 git  url: 'https://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@github.com/keresifon/eksjenkins.git' //git 'https://github.com/keresifon/portfolio.git' 
 
             }
 
