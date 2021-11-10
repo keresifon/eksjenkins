@@ -1,11 +1,11 @@
 variable "s3_bucket" {
-    default = "enobasin"
+    default = "enojenkins"
     description = "Bucket Name"
     type = string
 }
 
 variable "db_name" {
-    default = "terraform-lock"
+    default = "terrajen-lock"
     description = "Database Name"
     type = string
 }
