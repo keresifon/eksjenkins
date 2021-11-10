@@ -1,0 +1,142 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@2.0.3
+  aws-eks: circleci/aws-eks@1.1.0
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  terraform:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_DEFAULT_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      - run:
+          command: |
+            sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+            curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+            sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+            sudo apt-get update && sudo apt-get install terraform
+            cd kubernetes
+            terraform init
+            terraform destroy -auto-approve
+
+  IngressRole:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_DEFAULT_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      - run:
+          command: |
+            sudo apt-get update
+            sudo apt-get -qq -y install curl
+            sudo apt-get install -y unzip
+            curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+            sudo mv /tmp/eksctl /usr/local/bin
+            cd kubernetes
+            aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json
+            eksctl utils associate-iam-oidc-provider --region=${AWS_DEFAULT_REGION} --cluster=${EKS_CLUSTER_NAME} --approve
+            eksctl create iamserviceaccount \
+                --cluster=${EKS_CLUSTER_NAME} \
+                --namespace=kube-system \
+                --name=aws-load-balancer-controller \
+                --attach-policy-arn=arn:aws:iam::${AWS_ACCOUNT_ID}:policy/ALBIngressControllerIAMPolicy \
+                --approve \
+                --override-existing-serviceaccounts 
+  AWSIngress:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_DEFAULT_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      - aws-eks/update-kubeconfig-with-authenticator:
+          install-kubectl: true
+          cluster-name: ${EKS_CLUSTER_NAME}
+          aws-region: ${AWS_DEFAULT_REGION}
+      - run:
+          command: |
+            sudo apt-get update
+            sudo apt-get -qq -y install curl
+            sudo apt-get install -y unzip
+            curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+            sudo apt-get install apt-transport-https --yes
+            echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+            sudo apt-get update
+            sudo apt-get install helm
+            curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+            sudo mv /tmp/eksctl /usr/local/bin
+            kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+            helm repo add eks https://aws.github.io/eks-charts
+            helm repo update 
+            helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
+              -n kube-system \
+              --set clusterName=${EKS_CLUSTER_NAME} \
+              --set serviceAccount.create=false \
+              --set serviceAccount.name=aws-load-balancer-controller
+
+  deploy:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_DEFAULT_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      - aws-eks/update-kubeconfig-with-authenticator:
+          install-kubectl: true
+          cluster-name: ${EKS_CLUSTER_NAME}
+          aws-region: ${AWS_DEFAULT_REGION}
+      - run:
+          command: |
+            cd kubernetes
+            kubectl apply -f namespace.yaml 
+            kubectl apply -f service.yaml 
+            kubectl apply -f ingress.yaml 
+            kubectl apply -f deployment.yaml
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  terraform-workflow:
+    jobs:
+      - terraform
+      # - IngressRole:
+      #     requires:
+      #       - "terraform"
+      # - AWSIngress:
+      #     requires:
+      #       - "IngressRole"
+      # - deploy:
+      #     requires:
+      #       - "AWSIngress"
