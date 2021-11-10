@@ -13,11 +13,7 @@ pipeline {
     }
    
    
-    agent any 
-
-    parameters {
-    gitParameter branchFilter: 'origin/(.*)', defaultValue: 'eks', name: 'BRANCH', type: 'PT_BRANCH'
-  }
+    
 
     stages { 
 
