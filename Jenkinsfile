@@ -10,12 +10,10 @@ pipeline {
 
     stages { 
 
-        
-
          stage('Building') { 
              agent {
                 docker {
-                    image 'node:12-alpine'
+                    image 'ubuntu:21.10'
                 }
             }
 
