@@ -10,15 +10,7 @@ pipeline {
 
     stages { 
 
-        stage('Cloning our Git') { 
-
-            steps { 
-
-                 git  url: 'https://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@github.com/keresifon/eksjenkins.git' //git 'https://github.com/keresifon/portfolio.git' 
-
-            }
-
-        } 
+        
 
          stage('Building') { 
              agent {
