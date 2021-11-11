@@ -18,7 +18,7 @@ pipeline {
             }
 
              steps { 
-                      sh "su apt-get update"
+                      sh "apt-get update"
                     //   sh "apt-get install -y gnupg software-properties-common curl"
                 
 
