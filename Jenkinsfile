@@ -13,7 +13,7 @@ pipeline {
          stage('Building') { 
              agent {
                 docker {
-                    image 'cimg/base:edge'
+                    image 'ubuntu:xenial'
                 }
             }
 
