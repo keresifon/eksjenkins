@@ -17,7 +17,7 @@ pipeline {
                 }
             }
 
-             steps {  sh "USER root"
+             steps {  sh "USER ubuntu"
                       sh "apt-get update"
                     //   sh "apt-get install -y gnupg software-properties-common curl"
                 
