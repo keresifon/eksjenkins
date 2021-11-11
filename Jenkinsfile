@@ -5,7 +5,7 @@ pipeline {
     
    
     agent any 
-          
+
     
 
     stages { 
@@ -13,12 +13,12 @@ pipeline {
          stage('Building') { 
              agent {
                 docker {
-                    image 'node:12-alpine'
+                    image 'ubuntu:21.10'
                 }
             }
 
-             steps {  
-                      sh "apt-get update"
+             steps { 
+                      sh "sudo apt-get update"
                     //   sh "apt-get install -y gnupg software-properties-common curl"
                 
 
