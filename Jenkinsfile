@@ -2,15 +2,15 @@
 
 pipeline { 
 
-    environment { 
+    // environment { 
 
-        //registry = "keresifon/gke" 
+    //     registry = "keresifon/gke" 
 
-        registryCredential = 'keresifon' 
+    //     registryCredential = 'keresifon' 
 
-        dockerImage = 'ubuntu:21.10' 
+    //     dockerImage = '' 
     
-    }
+    // }
    
    
     agent {
