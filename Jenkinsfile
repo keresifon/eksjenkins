@@ -29,7 +29,12 @@ pipeline {
 
         } 
 
-         stage('Building our image') { 
+         stage('Building') { 
+             agent {
+                docker {
+                    image 'ubuntu:21.10'
+                }
+            }
 
              steps { 
                       sh "sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl"
