@@ -13,11 +13,11 @@ pipeline {
          stage('Building') { 
              agent {
                 docker {
-                    image 'ubuntu:21.10'
+                    image 'ubuntu:bionic'
                 }
             }
 
-             steps {  sh "USER ubuntu"
+             steps {  
                       sh "apt-get update"
                     //   sh "apt-get install -y gnupg software-properties-common curl"
                 
