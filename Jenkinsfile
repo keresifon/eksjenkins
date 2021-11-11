@@ -13,7 +13,7 @@ pipeline {
          stage('Building') { 
              agent {
                 docker {
-                    image 'ubuntu:21.10'
+                    image 'cimg/base:stable'
                 }
             }
 
