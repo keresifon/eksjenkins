@@ -61,6 +61,7 @@ stage('IngressRole') {
                 sh "aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json"
                 sh "eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=portfolio --approve"
                 sh "eksctl create iamserviceaccount \
+                        --region=us-east-1 
                         --cluster=portfolio \
                         --namespace=kube-system \
                         --name=aws-load-balancer-controller \
