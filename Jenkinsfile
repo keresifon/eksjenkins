@@ -19,7 +19,7 @@ pipeline {
 
              steps {  
                       sh "cd kubernetes"
-                      sh "terraform init"
+                      sh "ls"
                       //sh "apt-get install -y gnupg software-properties-common curl"
                 
 
