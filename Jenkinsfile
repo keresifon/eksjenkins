@@ -13,7 +13,7 @@ pipeline {
          stage('Building') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:latest'
+                    image 'keresifon/eksjenkins:latestn'
                 }
             }
 
