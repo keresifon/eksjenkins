@@ -57,7 +57,7 @@ stage('IngressRole') {
                 sh "pwd"
                 // sh "echo $USER"
                 // sh "getent group sudo"
-                sh "aws eks --region us-east-1 update-kubeconfig --name portfolio"
+                //sh "aws eks --region us-east-1 update-kubeconfig --name portfolio"
                 sh "aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json"
                 sh "eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=portfolio --approve"
                 sh "eksctl create iamserviceaccount \
@@ -91,7 +91,7 @@ stage('AWSIngress') {
                       sh "pwd"
                 dir('kubernetes') {
                 sh "pwd"
-                        sh "aws eks --region us-east-1 update-kubeconfig --name portfolio " 
+                        //sh "aws eks --region us-east-1 update-kubeconfig --name portfolio " 
                         sh "kubectl apply -k 'github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master' "
                         sh "helm repo add eks https://aws.github.io/eks-charts"
                         sh "helm repo update"
