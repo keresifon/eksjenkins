@@ -13,13 +13,13 @@ pipeline {
          stage('Building') { 
              agent {
                 docker {
-                    image 'ubuntu:xenial'
+                    image 'keresifon/eksjenkins:latest'
                 }
             }
 
              steps {  
-                      sh "whoami"
-                      sh "sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl"
+                      sh "cd kubernetes"
+                      sh "terraform init"
                       //sh "apt-get install -y gnupg software-properties-common curl"
                 
 
