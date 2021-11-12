@@ -18,7 +18,7 @@ pipeline {
             }
 
              steps {  
-                 sh "apt install -y awscli"
+                 sh "aws s3 ls"
                       sh "pwd"
                 dir('kubernetes') {
                 sh "pwd"

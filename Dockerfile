@@ -5,6 +5,7 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
 RUN  apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN  apt-get update &&  apt-get install terraform
 RUN  apt-get install -y unzip
+RUN apt install -y awscli
 RUN curl https://baltocdn.com/helm/signing.asc |  apt-key add -
 RUN apt-get install apt-transport-https --yes
 RUN echo "deb https://baltocdn.com/helm/stable/debian/ all main" |  tee /etc/apt/sources.list.d/helm-stable-debian.list
