@@ -57,7 +57,7 @@ stage('IngressRole') {
                 sh "pwd"
                 sh "echo $USER"
                 sh "getent group sudo"
-                sh "sudo aws eks --region us-east-1 update-kubeconfig --name portfolio"
+                sh "aws eks --region us-east-1 update-kubeconfig --name portfolio"
                 sh "aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json"
                 sh "eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=portfolio --approve"
                 sh "eksctl create iamserviceaccount \
