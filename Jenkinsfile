@@ -3,18 +3,18 @@ pipeline {
 
     
    
-    agent any 
+    agent {
+                docker {
+                    image 'keresifon/eksjenkins:kubernetes.4'
+                }
+            }
 
     
 
     stages { 
 
 //          stage('Provision') { 
-//              agent {
-//                 docker {
-//                     image 'keresifon/eksjenkins:kubernetes.4'
-//                 }
-//             }
+//              
 
 //              steps {  
 //                  withCredentials([[
@@ -41,11 +41,7 @@ pipeline {
 // }
 
 stage('IngressRole') { 
-             agent {
-                docker {
-                    image 'keresifon/eksjenkins:kubernetes.5'
-                }
-            }
+             
 
              steps {  
                  withCredentials([[
@@ -81,11 +77,7 @@ stage('IngressRole') {
 }
 
 stage('AWSIngress') { 
-             agent {
-                docker {
-                    image 'keresifon/eksjenkins:kubernetes.4'
-                }
-            }
+             
 
              steps {  
                  withCredentials([[
@@ -118,11 +110,7 @@ stage('AWSIngress') {
 }
 
 stage('Deploy') { 
-             agent {
-                docker {
-                    image 'keresifon/eksjenkins:kubernetes.4'
-                }
-            }
+             
 
              steps {  
                  withCredentials([[
