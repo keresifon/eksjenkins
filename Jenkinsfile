@@ -21,7 +21,7 @@ pipeline {
                       sh "pwd"
                 dir('kubernetes') {
                 sh "pwd"
-                sh "ls"
+                sh "terraform init"
            }
            sh "pwd"
                 
