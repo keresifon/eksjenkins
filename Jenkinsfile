@@ -9,41 +9,41 @@ pipeline {
 
     stages { 
 
-         stage('Provision') { 
-             agent {
-                docker {
-                    image 'keresifon/eksjenkins:kubernetes.3'
-                }
-            }
+//          stage('Provision') { 
+//              agent {
+//                 docker {
+//                     image 'keresifon/eksjenkins:kubernetes.4'
+//                 }
+//             }
 
-             steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+//              steps {  
+//                  withCredentials([[
+//                             $class: 'AmazonWebServicesCredentialsBinding',
+//                             credentialsId: "kereiac",
+//                             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+//                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+//                         ]]) {
 
               
-                      sh "pwd"
-                dir('kubernetes') {
-                sh "pwd"
-                sh "echo $USER"
-                sh "terraform init"
-                sh "terraform destroy -auto-approve"
-           }
-           sh "pwd"
+//                       sh "pwd"
+//                 dir('kubernetes') {
+//                 sh "pwd"
+//                 sh "echo $USER"
+//                 sh "terraform init"
+//                 sh "terraform destroy -auto-approve"
+//            }
+//            sh "pwd"
                 
 
-             } 
+//              } 
 
-        }
-}
+//         }
+// }
 
 stage('IngressRole') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.3'
+                    image 'keresifon/eksjenkins:kubernetes.4'
                 }
             }
 
@@ -82,7 +82,7 @@ stage('IngressRole') {
 stage('AWSIngress') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.3'
+                    image 'keresifon/eksjenkins:kubernetes.4'
                 }
             }
 
@@ -119,7 +119,7 @@ stage('AWSIngress') {
 stage('Deploy') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.3'
+                    image 'keresifon/eksjenkins:kubernetes.4'
                 }
             }
 
