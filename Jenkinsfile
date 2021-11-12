@@ -12,7 +12,7 @@ pipeline {
          stage('Provision') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.2'
+                    image 'keresifon/eksjenkins:kubernetes.3'
                 }
             }
 
@@ -43,7 +43,7 @@ pipeline {
 stage('IngressRole') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.2'
+                    image 'keresifon/eksjenkins:kubernetes.3'
                 }
             }
 
@@ -82,7 +82,7 @@ stage('IngressRole') {
 stage('AWSIngress') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.2'
+                    image 'keresifon/eksjenkins:kubernetes.3'
                 }
             }
 
@@ -119,7 +119,7 @@ stage('AWSIngress') {
 stage('Deploy') { 
              agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.2'
+                    image 'keresifon/eksjenkins:kubernetes.3'
                 }
             }
 
