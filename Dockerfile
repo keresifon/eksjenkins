@@ -20,6 +20,6 @@ RUN apt-get update
 RUN apt-get install helm
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
 RUN mv /tmp/eksctl /usr/local/bin
-RUN useradd -ms /bin/bash jenkins
-RUN usermod -aG sudo jenkins
+# RUN useradd -ms /bin/bash jenkins
+# RUN usermod -aG sudo jenkins
 RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
