@@ -28,7 +28,7 @@ pipeline {
                       sh "pwd"
                 dir('kubernetes') {
                 sh "pwd"
-                
+                sh "whoami"
                 sh "terraform init"
                 sh "terraform apply -auto-approve"
            }
