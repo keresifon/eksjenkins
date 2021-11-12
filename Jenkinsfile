@@ -5,7 +5,7 @@ pipeline {
    
     agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.4'
+                    image 'keresifon/eksjenkins:kubernetes.5'
                 }
             }
 
