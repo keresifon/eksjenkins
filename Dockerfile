@@ -2,6 +2,9 @@
 FROM ubuntu:21.10
 RUN apt-get update && apt-get install -y gnupg software-properties-common curl
 RUN apt-get install -y sudo
+RUN useradd jenkins
+RUN usermod -aG sudo jenkins
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
 RUN  apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN  apt-get update &&  apt-get install terraform
@@ -20,6 +23,3 @@ RUN apt-get update
 RUN apt-get install helm
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
 RUN mv /tmp/eksctl /usr/local/bin
-# RUN useradd -ms /bin/bash jenkins
-# RUN usermod -aG sudo jenkins
-RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
