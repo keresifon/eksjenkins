@@ -18,6 +18,14 @@ pipeline {
             }
 
              steps {  
+                 withCredentials([[
+    $class: 'AmazonWebServicesCredentialsBinding',
+    credentialsId: "kereiac",
+    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+]]) {
+    // AWS Code
+
                  sh "aws s3 ls"
                       sh "pwd"
                 dir('kubernetes') {
@@ -31,7 +39,7 @@ pipeline {
              } 
 
         }
-
+}
         // stage('Deploy our image') { 
 
         //     steps { 
