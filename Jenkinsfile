@@ -18,9 +18,12 @@ pipeline {
             }
 
              steps {  
-                      sh "cd kubernetes"
-                      sh "ls"
-                      //sh "apt-get install -y gnupg software-properties-common curl"
+                      sh "pwd"
+                dir('kubernetes') {
+                sh "pwd"
+                sh "ls"
+           }
+           sh "pwd"
                 
 
              } 
