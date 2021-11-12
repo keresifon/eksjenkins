@@ -18,9 +18,11 @@ pipeline {
             }
 
              steps {  
+                 sh "apt install -y awscli"
                       sh "pwd"
                 dir('kubernetes') {
                 sh "pwd"
+                
                 sh "terraform init"
            }
            sh "pwd"
