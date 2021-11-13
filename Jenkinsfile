@@ -1,6 +1,6 @@
 
 pipeline { 
-
+     
     
    
     agent {
@@ -12,17 +12,23 @@ pipeline {
     
 
     stages { 
-
-         stage('Provision') { 
-             
-
-             steps {  
-                 withCredentials([[
+        withCredentials([[
                             $class: 'AmazonWebServicesCredentialsBinding',
                             credentialsId: "kereiac",
                             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]]) {
+
+         stage('Provision') { 
+             
+
+             steps {  
+                //  withCredentials([[
+                //             $class: 'AmazonWebServicesCredentialsBinding',
+                //             credentialsId: "kereiac",
+                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                //         ]]) {
 
               
                       sh "pwd"
@@ -35,7 +41,7 @@ pipeline {
            sh "pwd"
                 
 
-             } 
+             //} 
 
         }
 }
@@ -44,12 +50,12 @@ stage('IngressRole') {
              
 
              steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+                //  withCredentials([[
+                //             $class: 'AmazonWebServicesCredentialsBinding',
+                //             credentialsId: "kereiac",
+                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                //         ]]) {
 
               
                       sh "pwd"
@@ -58,7 +64,7 @@ stage('IngressRole') {
                 // sh "echo $USER"
                 // sh "getent group sudo"
                 //sh "aws eks --region us-east-1 update-kubeconfig --name portfolio"
-                sh "aws iam create-policy --policy-name ALBIngressControllerIAMNPolicy --policy-document file://iam_policy.json"
+                sh "aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json"
                 sh "eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=portfolio --approve"
                 sh "eksctl create iamserviceaccount \
                         --region=us-east-1 \
@@ -72,7 +78,7 @@ stage('IngressRole') {
            sh "pwd"
                 
 
-             } 
+           //  } 
 
         }
 }
@@ -81,19 +87,18 @@ stage('AWSIngress') {
              
 
              steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+                //  withCredentials([[
+                //             $class: 'AmazonWebServicesCredentialsBinding',
+                //             credentialsId: "kereiac",
+                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                //         ]]) {
 
               
                       sh "pwd"
                 dir('kubernetes') {
                 sh "pwd"
-                        //sh "aws eks --region us-east-1 update-kubeconfig --name portfolio " 
-                        sh "kubectl apply -k 'github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master' "
+                        sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
                         sh "helm repo add eks https://aws.github.io/eks-charts"
                         sh "helm repo update"
                         sh "helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
@@ -105,7 +110,7 @@ stage('AWSIngress') {
            sh "pwd"
                 
 
-             } 
+           //  } 
 
         }
 }
@@ -114,12 +119,12 @@ stage('Deploy') {
              
 
              steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+                //  withCredentials([[
+                //             $class: 'AmazonWebServicesCredentialsBinding',
+                //             credentialsId: "kereiac",
+                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                //         ]]) {
 
               
                       sh "pwd"
@@ -136,11 +141,11 @@ stage('Deploy') {
            sh "pwd"
                 
 
-             } 
+          //   } 
 
         }
 }
-
+    }
     }
 
 }
