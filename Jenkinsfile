@@ -14,32 +14,32 @@ pipeline {
     stages { 
       
 
-         stage('Provision') { 
+//          stage('Provision') { 
              
 
-             steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+//              steps {  
+//                  withCredentials([[
+//                             $class: 'AmazonWebServicesCredentialsBinding',
+//                             credentialsId: "kereiac",
+//                             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+//                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+//                         ]]) {
 
               
-                      sh "pwd"
-                dir('kubernetes') {
-                sh "pwd"
-                //sh "echo $USER"
-                sh "terraform init"
-                sh "terraform apply -auto-approve"
-           }
-           sh "pwd"
+//                       sh "pwd"
+//                 dir('kubernetes') {
+//                 sh "pwd"
+//                 //sh "echo $USER"
+//                 sh "terraform init"
+//                 sh "terraform apply -auto-approve"
+//            }
+//            sh "pwd"
                 
 
-             } 
+//              } 
 
-        }
-}
+//         }
+// }
 
 // stage('IngressRole') { 
              
@@ -90,7 +90,8 @@ stage('AWSIngress') {
                         ]]) {
 
               
-                        sh "cat /etc/kubernetes/admin.conf"
+                        sh "cd $HOME/.kube"
+                         sh "ls"
                         sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
                         sh "helm repo add eks https://aws.github.io/eks-charts"
                         sh "helm repo update"
