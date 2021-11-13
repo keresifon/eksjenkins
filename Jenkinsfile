@@ -89,16 +89,20 @@ stage('AWSIngress') {
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]]) {
 
-              
-                        sh "$HOME/.kube"
-                        sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
-                        sh "helm repo add eks https://aws.github.io/eks-charts"
-                        sh "helm repo update"
-                        sh "helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
-                                -n kube-system \
-                                --set clusterName=portfolio \
-                                --set serviceAccount.create=false \
-                                --set serviceAccount.name=aws-load-balancer-controller"
+  withKubeConfig([credentialsId: 'kubernetes-config']) {
+        sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
+        sh 'chmod u+x ./kubectl'  
+        sh './kubectl get pods'
+    }
+                        // sh "$HOME/.kube"
+                        // sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
+                        // sh "helm repo add eks https://aws.github.io/eks-charts"
+                        // sh "helm repo update"
+                        // sh "helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
+                        //         -n kube-system \
+                        //         --set clusterName=portfolio \
+                        //         --set serviceAccount.create=false \
+                        //         --set serviceAccount.name=aws-load-balancer-controller"
                     
                 
 
