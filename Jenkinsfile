@@ -90,7 +90,7 @@ stage('AWSIngress') {
                         ]]) {
 
               
-                        
+                        sh "kubectl cluster-info"
                         sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
                         sh "helm repo add eks https://aws.github.io/eks-charts"
                         sh "helm repo update"
