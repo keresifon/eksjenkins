@@ -1,12 +1,7 @@
 
 pipeline { 
      
-      withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+      
    
     agent {
                 docker {
@@ -23,12 +18,12 @@ pipeline {
              
 
              steps {  
-                //  withCredentials([[
-                //             $class: 'AmazonWebServicesCredentialsBinding',
-                //             credentialsId: "kereiac",
-                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                //         ]]) {
+                 withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "kereiac",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
 
               
                       sh "pwd"
@@ -36,12 +31,12 @@ pipeline {
                 sh "pwd"
                 //sh "echo $USER"
                 sh "terraform init"
-                sh "terraform destroy -auto-approve"
+                sh "terraform apply -auto-approve"
            }
            sh "pwd"
                 
 
-             //} 
+             } 
 
         }
 }
@@ -50,12 +45,12 @@ stage('IngressRole') {
              
 
              steps {  
-                //  withCredentials([[
-                //             $class: 'AmazonWebServicesCredentialsBinding',
-                //             credentialsId: "kereiac",
-                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                //         ]]) {
+                 withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "kereiac",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
 
               
                       sh "pwd"
@@ -78,7 +73,7 @@ stage('IngressRole') {
            sh "pwd"
                 
 
-           //  } 
+            } 
 
         }
 }
@@ -87,12 +82,12 @@ stage('AWSIngress') {
              
 
              steps {  
-                //  withCredentials([[
-                //             $class: 'AmazonWebServicesCredentialsBinding',
-                //             credentialsId: "kereiac",
-                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                //         ]]) {
+                 withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "kereiac",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
 
               
                       sh "pwd"
@@ -110,7 +105,7 @@ stage('AWSIngress') {
            sh "pwd"
                 
 
-           //  } 
+            } 
 
         }
 }
@@ -119,12 +114,12 @@ stage('Deploy') {
              
 
              steps {  
-                //  withCredentials([[
-                //             $class: 'AmazonWebServicesCredentialsBinding',
-                //             credentialsId: "kereiac",
-                //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                //         ]]) {
+                 withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "kereiac",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
 
               
                       sh "pwd"
@@ -141,11 +136,10 @@ stage('Deploy') {
            sh "pwd"
                 
 
-          //   } 
+          /  } 
 
         }
 }
     }
     }
 
-}
