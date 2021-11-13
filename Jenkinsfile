@@ -5,7 +5,7 @@ pipeline {
    
     agent {
                 docker {
-                    image 'keresifon/eksjenkins:kubernetes.7'
+                    image 'keresifon/eksjenkins:kubernetes.8'
                 }
             }
 
@@ -31,7 +31,7 @@ pipeline {
                 sh "pwd"
                 //sh "echo $USER"
                 sh "terraform init"
-                sh "terraform destroy -auto-approve"
+                sh "terraform apply -auto-approve"
            }
            sh "pwd"
                 
