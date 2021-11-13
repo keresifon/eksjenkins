@@ -14,32 +14,32 @@ pipeline {
     stages { 
       
 
-//          stage('Provision') { 
+         stage('Provision') { 
              
 
-//              steps {  
-//                  withCredentials([[
-//                             $class: 'AmazonWebServicesCredentialsBinding',
-//                             credentialsId: "kereiac",
-//                             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-//                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-//                         ]]) {
+             steps {  
+                 withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "kereiac",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
 
               
-//                       sh "pwd"
-//                 dir('kubernetes') {
-//                 sh "pwd"
-//                 //sh "echo $USER"
-//                 sh "terraform init"
-//                 sh "terraform apply -auto-approve"
-//            }
-//            sh "pwd"
+                      sh "pwd"
+                dir('kubernetes') {
+                sh "pwd"
+                //sh "echo $USER"
+                sh "terraform init"
+                sh "terraform apply -auto-approve"
+           }
+           sh "pwd"
                 
 
-//              } 
+             } 
 
-//         }
-// }
+        }
+}
 
 // stage('IngressRole') { 
              
