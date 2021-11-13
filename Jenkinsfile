@@ -136,7 +136,7 @@ stage('Deploy') {
            sh "pwd"
                 
 
-          /  } 
+            } 
 
         }
 }
