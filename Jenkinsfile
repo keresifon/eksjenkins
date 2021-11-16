@@ -90,7 +90,7 @@ stage('AWSIngress') {
                         ]]) {
 
                         sh "export KUBECONFIG=~/.kube/config"
-                        sh "ls"
+                        sh "cd .."
                         //sh "chown -R $USER:$USER ~/.kube"
                         sh "aws eks  update-kubeconfig --name portfolio --region us-east-1"
                         //sh "kubectl version --client"
