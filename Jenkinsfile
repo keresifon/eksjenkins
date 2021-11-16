@@ -91,7 +91,8 @@ stage('AWSIngress') {
 
                         sh "export KUBECONFIG=~/.kube/config"
                         //sh "chown -R $USER:$USER ~/.kube"
-                        sh "cat /etc/sudoers"
+                        sh "mkdir -p $HOME/.kube"
+                        sh "cat $HOME/.kube"
                         sh "aws eks  update-kubeconfig --name portfolio --region us-east-1"
                         //sh "kubectl version --client"
                         sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
