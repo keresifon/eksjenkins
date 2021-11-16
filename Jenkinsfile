@@ -14,32 +14,32 @@ pipeline {
     stages { 
       
 
-         stage('Provision') { 
+        //  stage('Provision') { 
              
 
-             steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+        //      steps {  
+        //          withCredentials([[
+        //                     $class: 'AmazonWebServicesCredentialsBinding',
+        //                     credentialsId: "kereiac",
+        //                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        //                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        //                 ]]) {
 
               
-                      sh "pwd"
-                dir('kubernetes') {
-                sh "pwd"
-                //sh "echo $USER"
-                sh "terraform init"
-                sh "terraform apply -auto-approve"
-           }
-           sh "pwd"
+        //               sh "pwd"
+        //         dir('kubernetes') {
+        //         sh "pwd"
+        //         //sh "echo $USER"
+        //         sh "terraform init"
+        //         sh "terraform apply -auto-approve"
+        //    }
+        //    sh "pwd"
                 
 
-             } 
+//              } 
 
-        }
-}
+//         }
+// }
 
 // stage('IngressRole') { 
              
@@ -90,7 +90,7 @@ stage('AWSIngress') {
                         ]]) {
 
                         sh "export KUBECONFIG=~/.kube/config"
-                        sh "chown -R $USER:$USER ~/.kube"
+                        //sh "chown -R $USER:$USER ~/.kube"
                         sh "aws eks  update-kubeconfig --name portfolio --region us-east-1"
                         //sh "kubectl version --client"
                         sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
