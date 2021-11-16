@@ -90,8 +90,8 @@ stage('AWSIngress') {
                         ]]) {
 
                         //sh "export KUBECONFIG=~/.kube/config"
-                        //sh "aws eks  update-kubeconfig --name portfolio --region us-east-1"
-                        sh "kubectl version --client"
+                        sh "aws eks  update-kubeconfig --name portfolio --region us-east-1"
+                        //sh "kubectl version --client"
                         sh 'kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"'
                         sh "helm repo add eks https://aws.github.io/eks-charts"
                         sh "helm repo update"
