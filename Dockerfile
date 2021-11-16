@@ -20,4 +20,5 @@ RUN apt-get update
 RUN apt-get install helm
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
 RUN mv /tmp/eksctl /usr/local/bin
+RUN chmod -R 777 $HOME
 
