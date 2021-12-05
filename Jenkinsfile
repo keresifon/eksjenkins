@@ -27,6 +27,10 @@ pipeline {
 
               
                       sh "pwd"
+                      sh "apt-get update && apt-get install -y gnupg software-properties-common curl"
+                      sh "curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - "
+                      sh "apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main""
+                      sh "apt-get update && apt-get install terraform"
                 dir('kubernetes') {
                 sh "pwd"
                 //sh "echo $USER"
@@ -41,42 +45,42 @@ pipeline {
         }
 }
 
-stage('IngressRole') { 
+// stage('IngressRole') { 
              
 
-             steps {  
-                 withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "kereiac",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
+//              steps {  
+//                  withCredentials([[
+//                             $class: 'AmazonWebServicesCredentialsBinding',
+//                             credentialsId: "kereiac",
+//                             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+//                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+//                         ]]) {
 
               
-                      sh "pwd"
-                dir('kubernetes') {
-                sh "pwd"
-                // sh "echo $USER"
-                // sh "getent group sudo"
+//                       sh "pwd"
+//                 dir('kubernetes') {
+//                 sh "pwd"
+//                 // sh "echo $USER"
+//                 // sh "getent group sudo"
                 
-                sh "aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json"
-                sh "eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=portfolio --approve"
-                sh "eksctl create iamserviceaccount \
-                        --region=us-east-1 \
-                        --cluster=portfolio \
-                        --namespace=kube-system \
-                        --name=aws-load-balancer-controller \
-                        --attach-policy-arn=arn:aws:iam::386710470695:policy/ALBIngressControllerIAMPolicy \
-                        --approve \
-                        --override-existing-serviceaccounts"
-           }
-           sh "pwd"
+//                 sh "aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json"
+//                 sh "eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=portfolio --approve"
+//                 sh "eksctl create iamserviceaccount \
+//                         --region=us-east-1 \
+//                         --cluster=portfolio \
+//                         --namespace=kube-system \
+//                         --name=aws-load-balancer-controller \
+//                         --attach-policy-arn=arn:aws:iam::386710470695:policy/ALBIngressControllerIAMPolicy \
+//                         --approve \
+//                         --override-existing-serviceaccounts"
+//            }
+//            sh "pwd"
                 
 
-            } 
+//             } 
 
-        }
-}
+//         }
+// }
 
 // stage('AWSIngress') { 
              
