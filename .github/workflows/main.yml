@@ -46,114 +46,114 @@ jobs:
           sudo apt-get update && sudo apt-get install terraform
           cd kubernetes
           terraform init
-          terraform apply -auto-approve
+          terraform destroy -auto-approve
 
-  # This workflow contains a single job called "provision"
-  ingressrole:
-    # The type of runner that the job will run on
-    needs: provision
-    runs-on: ubuntu-latest
+#   # This workflow contains a single job called "provision"
+#   ingressrole:
+#     # The type of runner that the job will run on
+#     needs: provision
+#     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
       
 
-#       # Runs a single command using the runners shell
-#       - name: Run a one-line script
-#         run: echo Hello, world!
+# #       # Runs a single command using the runners shell
+# #       - name: Run a one-line script
+# #         run: echo Hello, world!
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+#       # Runs a set of commands using the runners shell
+#       - name: Run a multi-line script
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           
-        run: |
-           sudo apt-get update
-           sudo apt-get install -y awscli
-           curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
-           mv /tmp/eksctl /usr/local/bin
-           cd kubernetes
-           aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json
-           eksctl utils associate-iam-oidc-provider --region=${{ secrets.AWS_DEFAULT_REGION }} --cluster=${{ secrets.EKS_CLUSTER_NAME}} --approve
-           eksctl create iamserviceaccount --cluster=${{ secrets.EKS_CLUSTER_NAME }} --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:policy/ALBIngressControllerIAMPolicy --approve --override-existing-serviceaccounts
+#         run: |
+#            sudo apt-get update
+#            sudo apt-get install -y awscli
+#            curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.70.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+#            mv /tmp/eksctl /usr/local/bin
+#            cd kubernetes
+#            aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam_policy.json
+#            eksctl utils associate-iam-oidc-provider --region=${{ secrets.AWS_DEFAULT_REGION }} --cluster=${{ secrets.EKS_CLUSTER_NAME}} --approve
+#            eksctl create iamserviceaccount --cluster=${{ secrets.EKS_CLUSTER_NAME }} --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:policy/ALBIngressControllerIAMPolicy --approve --override-existing-serviceaccounts
 
-  awsingress:
-    # The type of runner that the job will run on
-    needs: ingressrole
-    runs-on: ubuntu-latest
+#   awsingress:
+#     # The type of runner that the job will run on
+#     needs: ingressrole
+#     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
       
 
-#       # Runs a single command using the runners shell
-#       - name: Run a one-line script
-#         run: echo Hello, world!
+# #       # Runs a single command using the runners shell
+# #       - name: Run a one-line script
+# #         run: echo Hello, world!
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+#       # Runs a set of commands using the runners shell
+#       - name: Run a multi-line script
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y apt-transport-https ca-certificates curl
-            sudo apt-get install -y awscli
-            curl https://baltocdn.com/helm/signing.asc |  sudo apt-key add -
-            echo "deb https://baltocdn.com/helm/stable/debian/ all main" |  tee /etc/apt/sources.list.d/helm-stable-debian.list
-            sudo apt-get update
-            sudo apt-get install helm
-            sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-            echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-            sudo apt-get update
-            sudo apt-get install -y kubectl
-            aws eks  update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_DEFAULT_REGION }}
-            kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
-            helm repo add eks https://aws.github.io/eks-charts
-            helm repo update 
-            helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=${{ secrets.EKS_CLUSTER_NAME }} --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+#         run: |
+#             sudo apt-get update
+#             sudo apt-get install -y apt-transport-https ca-certificates curl
+#             sudo apt-get install -y awscli
+#             curl https://baltocdn.com/helm/signing.asc |  sudo apt-key add -
+#             echo "deb https://baltocdn.com/helm/stable/debian/ all main" |  sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+#             sudo apt-get update
+#             sudo apt-get install helm
+#             sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+#             echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+#             sudo apt-get update
+#             sudo apt-get install -y kubectl
+#             aws eks  update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_DEFAULT_REGION }}
+#             kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+#             helm repo add eks https://aws.github.io/eks-charts
+#             helm repo update 
+#             helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=${{ secrets.EKS_CLUSTER_NAME }} --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
    
-  deploy:
-    # The type of runner that the job will run on
-    needs: awsingress
-    runs-on: ubuntu-latest
+#   deploy:
+#     # The type of runner that the job will run on
+#     needs: awsingress
+#     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
       
 
-#       # Runs a single command using the runners shell
-#       - name: Run a one-line script
-#         run: echo Hello, world!
+# #       # Runs a single command using the runners shell
+# #       - name: Run a one-line script
+# #         run: echo Hello, world!
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+#       # Runs a set of commands using the runners shell
+#       - name: Run a multi-line script
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y apt-transport-https ca-certificates curl
-            sudo apt-get install -y awscli
-            curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-            echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-            sudo apt-get update
-            sudo apt-get install -y kubectl
-            aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_DEFAULT_REGION }}
-            cd kubernetes
-            kubectl apply -f namespace.yaml 
-            kubectl apply -f service.yaml 
-            kubectl apply -f ingress.yaml 
-            kubectl apply -f deployment.yaml
+#         run: |
+#             sudo apt-get update
+#             sudo apt-get install -y apt-transport-https ca-certificates curl
+#             sudo apt-get install -y awscli
+#             curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+#             echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+#             sudo apt-get update
+#             sudo apt-get install -y kubectl
+#             aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_DEFAULT_REGION }}
+#             cd kubernetes
+#             kubectl apply -f namespace.yaml 
+#             kubectl apply -f service.yaml 
+#             kubectl apply -f ingress.yaml 
+#             kubectl apply -f deployment.yaml
