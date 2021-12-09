@@ -1,4 +1,4 @@
-# CI/CD 
+# IaC CI/CD 
 A four stage pipeline to provision AWS resources for an EKS cluster 
 
 1. Provisioning the infrastructure using terraform to create the Amazon EKS cluster and deploy worker nodes 
