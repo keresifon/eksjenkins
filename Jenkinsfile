@@ -23,9 +23,9 @@ pipeline {
                 sh 'apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"'
                 sh 'apt-get update && apt-get install terraform'
                 dir('kubernetes') {
-                    sh 'pwd'
+                    
                     sh 'terraform init'
-                    sh 'terraform apply -auto-approve'
+                    sh 'terraform destroy -auto-approve'
                 }
             }
         }
